@@ -1,0 +1,89 @@
+<div class="container">
+  <form autocomplete="off" (ngSubmit)="pesquisar()">
+  <div class="ui-g">
+      <div class="ui-g-12">
+        <h1>Clientes</h1>
+      </div>
+
+      <div class="ui-lg-9 ui-md-9 ui-sm-12 ui-fluid">
+        <label>Nome</label>
+        <input pInputText type="text" name="nome" [(ngModel)]="filtro.nome" maxlength="60">
+      </div>
+
+      <div class="ui-lg-3 ui-md-3 ui-sm-12 ui-fluid">
+        <label>Situação</label>
+        <p-dropdown [options]="situacoes" name="situacao" [autoWidth]="false"
+        [(ngModel)]="filtro.situacao" (onChange)="pesquisar()"></p-dropdown>
+      </div>
+
+      <div class="ui-g-12">
+        <button pButton id="btPesquisar" type="submit" label="Pesquisar"></button>
+        &nbsp;
+        <button pButton id="btLimpar" type="button" label="Limpar" (click)="limpar()"></button>
+      </div>
+    </div>
+  </form>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-table [value]="clientes" [responsive]="true"
+      [paginator]="true" [rows]="filtro.itensPorPagina"
+      [lazy]="true" [totalRecords]="totalRegistros" (onLazyLoad)="aoMudarPagina($event)" #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th colspan="2">Nome</th>
+            <th class="ocultarColunaMobile">CPF</th>
+            <th class="ocultarColunaMobile">Data Nascimento</th>
+            <th class="ocultarColunaMobile">Celular</th>
+            <th class="ocultarColunaMobile">E-mail</th>
+            <th>Situação</th>
+            <th style="width:150px;">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">Nenhum cliente encontrado</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-cliente>
+          <tr>
+            <td colspan="2">{{cliente.nome}}</td>
+            <td align="center" class="ocultarColunaMobile" style="word-break: break-word">{{cliente.cpf}}</td>
+            <td align="center" class="ocultarColunaMobile" style="word-break: break-word">{{cliente.dataNascimento}}</td>
+            <td align="center" class="ocultarColunaMobile" style="word-break: break-word">{{cliente.telefonePrincipal}}</td>
+            <td class="ocultarColunaMobile" style="word-break: break-word">{{cliente.email}}</td>
+            <td style="word-break: break-word">{{cliente.situacao}}</td>
+            <td>
+              <a pButton icon="fa fa-info-circle" style="font-size: 1em" pTooltip="Visualizar"
+                tooltipPosition="top" [routerLink]="['/clientes', cliente.codigo]"
+                *ngIf = "auth.temPermissao('ROLE_CONSULTAR_CLIENTE')"></a>
+              <button pButton icon="fa fa-info-circle" style="font-size: 1em" pTooltip="Visualizar"
+                tooltipPosition="top" [routerLink]="['/clientes', cliente.codigo]"
+                *ngIf = "!auth.temPermissao('ROLE_CONSULTAR_CLIENTE')" [disabled]="true"></button>
+                &nbsp;
+              <a pButton icon="fas fa-child" style="font-size: 1em" pTooltip="Ver Aluno(s)"
+                tooltipPosition="top" [routerLink]="['/alunos', {cl: cliente.codigo}]"
+                *ngIf = "auth.temPermissao('ROLE_CONSULTAR_ALUNO')"></a>
+                &nbsp;
+              <button pButton icon="fa fa-trash-alt" style="font-size: 1em" pTooltip="Excluir"
+                tooltipPosition="top" (click)="confirmarExclusao(cliente)"
+                [disabled]="!auth.temPermissao('ROLE_EXCLUIR_CLIENTE')"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          Exibindo {{ qtExibidos }} de {{ totalRegistros }} retornados
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="ui-g-12">
+      <a pButton [routerLink]="['/clientes/novo']" label="Novo Cliente"
+        *ngIf="auth.temPermissao('ROLE_CADASTRAR_CLIENTE')"></a>
+      <button pButton [routerLink]="['/clientes/novo']" label="Novo Cliente"
+        *ngIf="!auth.temPermissao('ROLE_CADASTRAR_CLIENTE')" [disabled]="true"></button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,104 @@
+<div class="container">
+  <form autocomplete="off" (ngSubmit)="pesquisar()">
+  <div class="ui-g">
+      <div class="ui-g-12">
+        <h1>Alunos</h1>
+      </div>
+  </div>
+  <div class="ui-g">
+      <div class="ui-lg-9 ui-md-9 ui-sm-12 ui-fluid">
+        <label>Nome</label>
+        <input pInputText type="text" name="nome" [(ngModel)]="filtro.nome" maxlength="60">
+      </div>
+
+      <div class="ui-lg-3 ui-md-3 ui-sm-12 ui-fluid">
+        <label>Situação</label>
+        <p-dropdown [options]="situacoes" name="situacao" [autoWidth]="false"
+        [(ngModel)]="filtro.situacao" (onChange)="pesquisar()"></p-dropdown>
+      </div>
+
+      <div class="ui-lg-6 ui-md-5 ui-sm-12 ui-fluid">
+        <label>Cliente</label>
+        <p-dropdown name="cliente" [options]="clientes" placeholder="Selecione"
+          [autoWidth]="false" [filter]="true" (onChange)="pesquisar()"
+          [(ngModel)]="filtro.codigoCliente"></p-dropdown>
+      </div>
+
+      <div class="ui-lg-6 ui-md-7 ui-sm-12 ui-fluid">
+        <label>Turma</label>
+        <p-dropdown name="turma" [options]="turmas" placeholder="Selecione"
+          [autoWidth]="false" [filter]="true" (onChange)="pesquisar()"
+          [(ngModel)]="filtro.codigoTurma"></p-dropdown>
+      </div>
+
+      <div class="ui-g-12">
+        <button pButton type="submit" label="Pesquisar"></button>
+        &nbsp;
+        <button pButton id="btLimpar" type="button" label="Limpar" (click)="limpar()"></button>
+      </div>
+    </div>
+  </form>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-table [value]="alunos" [responsive]="true"
+      [paginator]="true" [rows]="filtro.itensPorPagina"
+      [lazy]="true" [totalRecords]="totalRegistros" (onLazyLoad)="aoMudarPagina($event)" #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th colspan="2">Nome</th>
+            <th colspan="2">Turma</th>
+            <th class="ocultarColunaMobile">Data Nascimento</th>
+            <th class="ocultarColunaMobile">Idade</th>
+            <th class="ocultarColunaMobile">Aut. Imagens</th>
+            <th>Situação</th>
+            <th style="width:150px;">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="9">Nenhum aluno encontrado</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-aluno>
+          <tr>
+            <td colspan="2">{{aluno.nome}}</td>
+            <td colspan="2">{{aluno.turma.nome}}</td>
+            <td align="center" class="ocultarColunaMobile">{{aluno.dataNascimento}}</td>
+            <td align="center" class="ocultarColunaMobile">{{getIdade(aluno)}}</td>
+            <td align="center" class="ocultarColunaMobile">{{aluno.autorizaImagensIndividuais ? 'Sim' : 'Não'}}</td>
+            <td align="center">{{aluno.situacao}}</td>
+            <td>
+              <a pButton icon="fa fa-info-circle" style="font-size: 1em" pTooltip="Detalhes"
+                tooltipPosition="top" [routerLink]="['/alunos', aluno.codigo]"
+                *ngIf = "auth.temPermissao('ROLE_CONSULTAR_ALUNO')"></a>
+              <button pButton icon="fa fa-info-circle" style="font-size: 1em" pTooltip="Detalhes"
+                tooltipPosition="top" [routerLink]="['/alunos', aluno.codigo]"
+                *ngIf = "!auth.temPermissao('ROLE_CONSULTAR_ALUNO')" [disabled]="true"></button>
+                &nbsp;
+              <a pButton icon="fas fa-address-card" style="font-size: 1em" pTooltip="Ver Cliente"
+                tooltipPosition="top" [routerLink]="['/clientes', aluno.cliente.codigo]"
+                *ngIf = "auth.temPermissao('ROLE_CONSULTAR_CLIENTE')"></a>
+                &nbsp;
+              <button pButton icon="fa fa-trash-alt" style="font-size: 1em" pTooltip="Excluir"
+                tooltipPosition="top" (click)="confirmarExclusao(aluno)"
+                [disabled]="!auth.temPermissao('ROLE_EXCLUIR_ALUNO')"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          Exibindo {{ qtExibidos }} de {{ totalRegistros }} retornados
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="ui-g-12">
+      <a pButton [routerLink]="['/alunos/novo']" label="Novo Aluno"
+        *ngIf="auth.temPermissao('ROLE_CADASTRAR_ALUNO')"></a>
+      <button pButton [routerLink]="['/alunos/novo']" label="Novo Aluno"
+        *ngIf="!auth.temPermissao('ROLE_CADASTRAR_ALUNO')" [disabled]="true"></button>
+    </div>
+
+  </div>
+
+</div>

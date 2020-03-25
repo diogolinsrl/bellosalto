@@ -1,0 +1,61 @@
+<div class="container">
+  <form autocomplete="off" (ngSubmit)="pesquisar()">
+  <div class="ui-g">
+      <div class="ui-g-12">
+        <h1>Turmas</h1>
+      </div>
+
+      <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-fluid">
+        <label>Nome</label>
+        <input pInputText type="text" name="nome" [(ngModel)]="filtro.nome" maxlength="60">
+      </div>
+
+      <div class="ui-g-12">
+        <button pButton id="btPesquisar" type="submit" label="Pesquisar"></button>
+        &nbsp;
+        <button pButton id="btLimpar" type="button" label="Limpar" (click)="limpar()"></button>
+      </div>
+    </div>
+  </form>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-table [value]="turmasConsultadasDTO" [responsive]="true"
+        [totalRecords]="totalRegistros"  #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th colspan="3">Nome</th>
+            <th>Qt. Alunos</th>
+            <th class="ocultarColunaMobile">Professora(s)</th>
+            <th class="ocultarColunaMobile">Idade Mínima</th>
+            <th style="width:100px;">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7">Nenhuma turma encontrada</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-turmaConsultadasDTO>
+          <tr>
+            <td colspan="3">{{turmaConsultadasDTO.turma.nome}}</td>
+            <td align="center">{{turmaConsultadasDTO.qtAlunosMatriculados}}</td>
+            <td align="center" class="ocultarColunaMobile" style="word-break: break-word">{{turmaConsultadasDTO.turma.professor}}</td>
+            <td align="center" class="ocultarColunaMobile" style="word-break: break-word">{{turmaConsultadasDTO.turma.idadeMinima}}</td>
+            <td align="center">
+              <a pButton icon="fas fa-child" style="font-size: 1em" pTooltip="Ver Aluno(s)"
+                tooltipPosition="top" [routerLink]="['/alunos', {tr: turmaConsultadasDTO.turma.codigo}]"
+                *ngIf = "auth.temPermissao('ROLE_CONSULTAR_ALUNO')"></a>
+                &nbsp;
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          Exibindo {{ totalRegistros }} registros
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+
+</div>

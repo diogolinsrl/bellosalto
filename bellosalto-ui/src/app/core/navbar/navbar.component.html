@@ -1,0 +1,28 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <a href="javascript:;" class="navbar-toggle" (click)="exibindoMenu = !exibindoMenu">
+          <i class="fa fa-bars"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div id="divMouseout" (mouseout)="onMouseout($event);">
+  <ul id="__menu__UL" class="navbar-menu" [hidden]="!exibindoMenu">
+    <li id="__menu__LI1" class="navbar-usuario">{{ auth.jwtPayload?.nome }}</li>
+    <li id="__menu__LI2" class="navbar-menuitem" routerLinkActive="ativo"
+      *ngIf="auth.temPermissao('ROLE_CONSULTAR_CLIENTE')"><a id="__menu__A2" routerLink="/clientes" (click)="exibindoMenu=false;">Clientes</a></li>
+    <li id="__menu__LI3" class="navbar-menuitem" routerLinkActive="ativo"
+      *ngIf="auth.temPermissao('ROLE_CONSULTAR_ALUNO')"><a id="__menu__A3" routerLink="/alunos" (click)="exibindoMenu=false;">Alunos</a></li>
+    <li id="__menu__LI4" class="navbar-menuitem" routerLinkActive="ativo"
+      *ngIf="auth.temPermissao('ROLE_CONSULTAR_TURMA')"><a id="__menu__A4" routerLink="/turmas" (click)="exibindoMenu=false;">Turmas</a></li>
+    <li id="__menu__LI5" class="navbar-menuitem"><a id="__menu__A5" href="javascript:;" (click)="loginContaAzul()">Conta Azul</a></li>
+    <li id="__menu__LI6" class="navbar-menuitem" routerLinkActive="ativo"
+      *ngIf="auth.temPermissao('ROLE_CONSULTAR_TURMA')"><a id="__menu__A6" routerLink="/pagamentosPendentes" 
+      (click)="exibindoMenu=false;">Pag. Pendentes</a></li>
+    <li id="__menu__LI7" class="navbar-menuitem"><a id="__menu__A7" href="javascript:;" (click)="logout()">Sair</a></li>
+  </ul>
+</div>

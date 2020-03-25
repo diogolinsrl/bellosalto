@@ -1,0 +1,47 @@
+<div class="container">
+  <form autocomplete="off" (ngSubmit)="pesquisarPagamentosPendentes()">
+  <div class="ui-g">
+      <div class="ui-g-12">
+        <h1>Pagamentos Pendentes</h1>
+      </div>
+
+      <div class="ui-g-12">
+        <button pButton id="btPesquisar" type="submit" label="Pesquisar"></button>
+        &nbsp;
+        <button pButton id="btCancelarDesconto" type="button" label="Cancelar Desconto" (click)="cancelarDesconto()"></button>
+      </div>
+    </div>
+  </form>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-table [value]="pagamentosPendentes" [responsive]="true"
+        [totalRecords]="totalRegistros"  #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th colspan="3">Nome</th>
+            <th class="ocultarColunaMobile">Qt. Boletos</th>
+            <th class="ocultarColunaMobile">Total Boletos</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">Nenhuma pagamento pendente encontrado</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pagamentoPendente>
+          <tr>
+            <td colspan="3">{{pagamentoPendente.nomeCliente}}</td>
+            <td align="center" class="ocultarColunaMobile" style="word-break: break-word">{{pagamentoPendente.qtPagamentosPendentes}}</td>
+            <td align="center" class="ocultarColunaMobile" style="word-break: break-word">{{pagamentoPendente.totalPagamentosPendentes}}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          Exibindo {{ totalRegistros }} registros
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+
+</div>
