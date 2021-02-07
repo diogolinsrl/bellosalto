@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://app.bellosalto.com:8443',
+  apiUrl: 'https://app.com:8443',
 
   tokenWhitelistedDomains: [ 
-    new RegExp('app.bellosalto.com')
+    new RegExp('app.com')
   ],
   tokenBlacklistedRoutes: [ new RegExp('\/oauth\/token') ]
 };
